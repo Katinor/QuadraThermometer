@@ -40,7 +40,18 @@ Super Great Thermometer on PIC16F876A
 # TODO
 - Remake CONV subroutine (Out of Date)
 - Get value to thermometer
+-- Thermometer -> *3 (AMP-circuit) -> *1.5 (Opt)
 - Make Storage system
+-- STACK
+- Button System
+-- When clock
+--- 1- PUSH 2- clock modify 3-H/M to M/S -> thermo
+-- When clock modify
+--- 1- increase 2-decrease 3-next
+-- When thermometer
+--- 1- PUSH 2- POP mode 3- clock
+-- When POP mode
+--- 1- select view 2- POP 3- EXIT
 
 # NOTICE
 Currently, subroutine ```DISP``` just use RC[0:7] and RA[0:3], and use CA.

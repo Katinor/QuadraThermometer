@@ -23,6 +23,14 @@ subfolder_inc=
 subfolder_obj=
 subfolder_lib=
 subfolder_lkr=
+[FILE_SUBFOLDERS]
+file_000=.
+[GENERATED_FILES]
+file_000=no
+[OTHER_FILES]
+file_000=no
+[FILE_INFO]
+file_000=main.asm
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 suite_state=
