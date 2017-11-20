@@ -41,3 +41,6 @@ RC7 - FND - A
 - Remake CONV subroutine (Out of Date)
 - Get value to thermometer
 - Make Storage system
+
+# NOTICE
+Currently, subroutine ```DISP``` just use RC[0:7] and RA[0:3], and use CA.
