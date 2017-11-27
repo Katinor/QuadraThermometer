@@ -1,6 +1,9 @@
 # QuadraThermometer
 Super Great Thermometer on PIC16F876A
 
+current Version : 0.0.1
+
+
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [TODO](#todo)
@@ -12,7 +15,7 @@ Super Great Thermometer on PIC16F876A
 - FND (CC)
 
 # Installation
-- RA0 - FND - DP
+- RA0 - Thermometer
 - RA1 - FND - G
 - RA2 - FND - COM2
 - RA3 - FND - COM1
@@ -20,7 +23,7 @@ Super Great Thermometer on PIC16F876A
 - RA5 - 
 - RA6 - 
 - RA7 -
-- RB0 -
+- RB0 - FND - DP
 - RB1 - FND - COM4
 - RB2 - FND - COM3
 - RB3 - SW1
