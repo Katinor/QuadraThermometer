@@ -1,7 +1,7 @@
 # QuadraThermometer
 Super Great Thermometer on PIC16F876A
 
-current Version : 0.0.1
+current Version : 0.0.2
 
 
 - [Requirements](#requirements)
