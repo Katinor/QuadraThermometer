@@ -7,6 +7,7 @@ current Version : 0.0.2
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [TODO](#todo)
+- [MODE](#mode)
 
 # Requirements
 - PIC16F876A
@@ -39,6 +40,32 @@ current Version : 0.0.2
 - RC5 - FND - C
 - RC6 - FND - B
 - RC7 - FND - A
+
+# MODE
+- Clock
+  - LED 1 is ON
+  - button A to change view (H:M <-> M:S)
+  - button B to call Thermometer MODE
+  - button C to call Clock Setting MODE
+- Thermometer
+  - LED 2 is ON
+  - button A to push a stack
+  - button B to call Clock MODE
+  - button C to call POP MODE
+- Clock Setting
+  - LED 1 is on
+  - button A to make value up
+  - button B to make value down
+  - button C to go next step
+  - when change current SEC, button A and B may reset it
+- POP - Clock
+  - button A to change view
+  - button B to call POP - Thermometer MODE
+  - button C to pop a stack
+- POP - Thermometer
+  - button A do nothing
+  - button B to call POP - Clock MODE
+  - button C to pop a stack
 
 # TODO
 - (COMPLETE) Remake CONV subroutine (Out of Date)
