@@ -1,7 +1,7 @@
 # QuadraThermometer
 Super Great Thermometer on PIC16F876A
 
-current Version : 0.0.3
+current Version : 1.0.0
 
 
 - [Requirements](#requirements)
@@ -73,12 +73,4 @@ current Version : 0.0.3
   - Thermometer -> *3 (AMP-circuit) -> *1.5 (Opt)
 - (COMPLETE) Make Storage system
   - STACK
-- Button System
-  - When clock
-    - 1- PUSH 2- clock modify 3-H/M to M/S -> thermo
-  - When clock modify
-    - 1- increase 2-decrease 3-next
-  - When thermometer
-    - 1- PUSH 2- POP mode 3- clock
-  - When POP mode
-    - 1- select view 2- POP 3- EXIT
+- (COMPLETE) Button System
