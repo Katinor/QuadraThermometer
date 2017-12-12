@@ -71,7 +71,7 @@ current Version : 0.0.3
 - (COMPLETE) Remake CONV subroutine (Out of Date)
 - Get value to thermometer
   - Thermometer -> *3 (AMP-circuit) -> *1.5 (Opt)
-- Make Storage system
+- (COMPLETE) Make Storage system
   - STACK
 - Button System
   - When clock
