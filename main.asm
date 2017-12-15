@@ -140,13 +140,10 @@ DOT_HALF EQU 3 ; NOT USED
 DOT_QUADRA EQU 4 ; NOT USED
 
 ;-- BEEP_STATUS
-;0 : 何历 柯坷橇 包府 (荤侩救窃)
+; check sudroutine
 B_ENABLE EQU 0
-;1 : 何历 冠磊 包府
 B_BEEPALLOW EQU 1
-;2 : 何历 冠磊 包府 2
 B_BEEPTEMPO EQU 2
-;3 : 何历 冠磊 包府 3
 B_PRES EQU 3
 
 ; -- start
