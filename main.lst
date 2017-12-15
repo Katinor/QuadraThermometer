@@ -1,0 +1,2104 @@
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (PROCESSOR)
+                      00001 PROCESSOR 16F876
+                      00002 #INCLUDE <P16F876A.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F876A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2011 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00522         LIST
+                      00003 ; --- STATUS BITS -----
+  00000007            00004 IR EQU 7
+  00000006            00005 RP1 EQU 6
+  00000005            00006 RP0 EQU 5
+  00000004            00007 NOT_TO EQU 4
+  00000003            00008 NOT_PD EQU 3
+  00000002            00009 ZF EQU 2
+  00000001            00010 DC EQU 1
+  00000000            00011 CF EQU 0
+                      00012 ; -- OPTION BITS -----
+  00000000            00013 W EQU B'0'
+  00000001            00014 F EQU .1
+                      00015 
+                      00016 ; -- GPR --
+  00000020            00017 GP_STATUS EQU 20H ; for global control
+  00000021            00018 SWT_STATUS EQU 21H ; for control major flags
+  00000022            00019 MOD_STATUS EQU 22H ; for control mode
+  00000023            00020 CLK_STATUS EQU 23H ; for control clock flags
+  00000024            00021 SP_STATUS EQU 24H ; for check 0.25sec
+  00000025            00022 STACK_NUM EQU 25H ; for save the number of stack
+                      00023 
+                      00024 ; backup buffer for interrupt
+  00000026            00025 W_TEMP EQU 26H
+  00000027            00026 S_TEMP EQU 27H
+  00000028            00027 PC_TEMP EQU 28H
+                      00028 ; for check time
+  00000029            00029 INT_CNT EQU 29H
+  0000002A            00030 B_DELAY EQU 2AH
+  0000002B            00031 BT_DELAY EQU 2BH
+                      00032 
+                      00033 ; for use Analog data control
+  0000002C            00034 RET_VOL EQU 2CH
+  0000002D            00035 ANL_CNT EQU 2DH
+  0000002E            00036 TBF_CNT EQU 2EH
+  0000002F            00037 TBF_BF EQU 2FH
+  00000030            00038 THBF_HALF EQU 30H
+  00000031            00039 THBF_1 EQU 31H
+  00000032            00040 THBF_2 EQU 32H
+  00000033            00041 THBF_3 EQU 33H
+  00000034            00042 THBF_4 EQU 34H
+  00000035            00043 T_1 EQU 35H
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000036            00044 T_10 EQU 36H
+  00000037            00045 T_100 EQU 37H
+  00000038            00046 CR_TH EQU 38H ; CuRrent THermometer value
+  00000039            00047 CR_TH_LAP EQU 39H
+  0000003A            00048 CR_TH_BUFF EQU 3AH
+                      00049 
+                      00050 ;DISP BUFFER
+  0000003B            00051 DISPBF_1 EQU 3BH
+  0000003C            00052 DISPBF_2 EQU 3CH
+  0000003D            00053 DISPBF_3 EQU 3DH
+  0000003E            00054 DISPBF_4 EQU 3EH
+                      00055 
+  0000003F            00056 BEEP_STATUS EQU 3FH
+                      00057 
+                      00058 ; define pointer's start - 40 ~ 5F
+  00000040            00059 S_BUF EQU 40H
+                      00060 
+                      00061 ;CLOCK
+  00000060            00062 D_1SEC EQU 60H
+  00000061            00063 D_10SEC EQU 61H
+  00000062            00064 D_1MIN EQU 62H
+  00000063            00065 D_10MIN EQU 63H
+  00000064            00066 D_1HR EQU 64H
+  00000065            00067 D_10HR EQU 65H
+  00000066            00068 D_THR EQU 66H
+  00000067            00069 D_1SEC_B EQU 67H
+  00000068            00070 D_10SEC_B EQU 68H
+  00000069            00071 D_1MIN_B EQU 69H
+  0000006A            00072 D_10MIN_B EQU 6AH
+  0000006B            00073 D_1HR_B EQU 6BH
+  0000006C            00074 D_10HR_B EQU 6CH
+                      00075 
+  0000006D            00076 MAIN_BF EQU 6DH
+  0000006E            00077 STACK_BF EQU 6EH
+  0000006F            00078 B_BEEP EQU 6FH
+  00000070            00079 B_BEEP_CNT EQU 70H
+  00000071            00080 B_BEEP_EB EQU 71H
+  00000072            00081 LAP_NUM EQU 72H
+                      00082 
+                      00083 ; -- GPR BIT
+                      00084 ;0-3 : FND COMMON set
+  00000000            00085 INT_SWT1 EQU 0
+  00000001            00086 INT_SWT2 EQU 1
+  00000002            00087 INT_SWT3 EQU 2
+  00000003            00088 INT_SWT4 EQU 3
+                      00089 ;4-7 : FND dot set
+  00000004            00090 DOT_SWT1 EQU 4
+  00000005            00091 DOT_SWT2 EQU 5
+  00000006            00092 DOT_SWT3 EQU 6
+  00000007            00093 DOT_SWT4 EQU 7
+                      00094 
+                      00095 ; -- SPR BIT
+                      00096 ;0 : H/M or M/S
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000000            00097 HM_CONV EQU 0
+                      00098 ;1 : Button Enable Flag
+  00000001            00099 BT_ENABLE EQU 1
+                      00100 ;2 : ANALOG Input Enable Flag
+  00000002            00101 ANL_ENABLE EQU 2
+                      00102 ;3 : LAP existance
+  00000003            00103 LAP_EXT EQU 3
+                      00104 ;4 : LAP overflow
+  00000004            00105 LAP_OV EQU 4
+                      00106 ;5~7 : LED dot set
+  00000005            00107 LED_SWT3 EQU 5
+  00000006            00108 LED_SWT2 EQU 6
+  00000007            00109 LED_SWT1 EQU 7
+                      00110 
+                      00111 ; -- MDR BIT
+                      00112 ;0 : Thermometer
+  00000000            00113 MODE1 EQU 0
+                      00114 ;1 : Clock
+  00000001            00115 MODE2 EQU 1
+                      00116 ;2 : Clock : Mody
+  00000002            00117 MODE3 EQU 2
+                      00118 ;3 : Ther : Lap_Check
+  00000003            00119 MODE4 EQU 3
+                      00120 ;5 : Analog check complete
+  00000005            00121 AD_DONE EQU 5
+                      00122 ;6 : ANL_MEAN_MODULATOR
+  00000006            00123 HALF_CHECK EQU 6
+                      00124 
+                      00125 ; -- CLK BIT
+                      00126 ;0 : HOUR
+  00000000            00127 HOUR EQU 0
+                      00128 ;1 : MIN
+  00000001            00129 MIN EQU 1
+                      00130 ;2 : SEC
+  00000002            00131 SEC EQU 2
+                      00132 
+                      00133 
+                      00134 ; -- SP-STATUS
+                      00135 ;0~4 : Timer Counter
+  00000000            00136 DOT_CHECK1 EQU 0
+  00000001            00137 DOT_CHECK2 EQU 1
+  00000002            00138 DOT_SEC EQU 2
+  00000003            00139 DOT_HALF EQU 3 ; NOT USED
+  00000004            00140 DOT_QUADRA EQU 4 ; NOT USED
+                      00141 
+                      00142 ;-- BEEP_STATUS
+                      00143 ;0 : 何历 柯坷橇 包府 (荤侩救窃)
+  00000000            00144 B_ENABLE EQU 0
+                      00145 ;1 : 何历 冠磊 包府
+  00000001            00146 B_BEEPALLOW EQU 1
+                      00147 ;2 : 何历 冠磊 包府 2
+  00000002            00148 B_BEEPTEMPO EQU 2
+                      00149 ;3 : 何历 冠磊 包府 3
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000003            00150 B_PRES EQU 3
+                      00151 
+                      00152 ; -- start
+Warning[205]: Found directive in column 1. (ORG)
+                      00153 ORG 0
+Warning[203]: Found opcode in column 1. (GOTO)
+0000   2???           00154 GOTO START_UP
+                      00155 
+                      00156 ; Interupt routine
+Warning[205]: Found directive in column 1. (ORG)
+                      00157 ORG 4
+0004   00A6           00158         MOVWF W_TEMP
+0005   0E03           00159         SWAPF STATUS,W
+0006   00A7           00160         MOVWF S_TEMP
+                      00161 
+0007   1B0C           00162         BTFSC PIR1,6
+0008   2???           00163         CALL A_INTR
+0009   190B           00164         BTFSC INTCON,2 ;
+000A   2???           00165         CALL DISP
+                      00166 
+000B   0E27           00167         SWAPF S_TEMP,W
+000C   0083           00168         MOVWF STATUS
+000D   0EA6           00169         SWAPF W_TEMP,F
+000E   0E26           00170         SWAPF W_TEMP,W
+000F   0009           00171         RETFIE
+                      00172 ;######################
+                      00173 ; D_CONV
+                      00174 ; BIT :
+                      00175 ; 7 6 5 4 3 2 1 0
+                      00176 ; A B C G . F D E
+                      00177 ;######################
+0010                  00178 D_CONV
+0010   390F           00179         ANDLW 0FH
+0011   0782           00180         ADDWF PCL,F
+0012   34E7           00181         RETLW B'11100111' ;0
+0013   3460           00182         RETLW B'01100000' ;1
+0014   34D3           00183         RETLW B'11010011' ;2
+0015   34F2           00184         RETLW B'11110010' ;3
+0016   3474           00185         RETLW B'01110100' ;4
+0017   34B6           00186         RETLW B'10110110' ;5
+0018   34B7           00187         RETLW B'10110111' ;6
+0019   34E0           00188         RETLW B'11100000' ;7
+001A   34F7           00189         RETLW B'11110111' ;8
+001B   34F6           00190         RETLW B'11110110' ;9
+001C   3410           00191         RETLW B'00010000' ;-
+001D   34FF           00192         RETLW B'11111111' ;Test
+001E   34E5           00193         RETLW B'11100101' ;C
+001F   3408           00194         RETLW B'00001000' ;.
+0020   3437           00195         RETLW B'00110111' ;E
+0021   3417           00196         RETLW B'00010111' ;F
+                      00197         
+                      00198 ;######################
+                      00199 ; DISP
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00200 ; DISP 1~4 -> LED control
+                      00201 ;######################
+0022                  00202 DISP
+0022   2???           00203         CALL BTD_MOD
+0023   2???           00204         CALL ANL_MOD
+0024   1585           00205         BSF PORTA, 3 
+0025   1505           00206         BSF PORTA, 2 
+0026   1506           00207         BSF PORTB, 2 
+0027   1486           00208         BSF PORTB, 1 
+0028   1820           00209         BTFSC GP_STATUS, INT_SWT1
+0029   2???           00210         GOTO DISP1
+002A   18A0           00211         BTFSC GP_STATUS, INT_SWT2
+002B   2???           00212         GOTO DISP2
+002C   1920           00213         BTFSC GP_STATUS, INT_SWT3
+002D   2???           00214         GOTO DISP3
+002E   19A0           00215         BTFSC GP_STATUS, INT_SWT4
+002F   2???           00216         GOTO DISP4
+0030   2???           00217         GOTO DISP_LED
+0031                  00218 DISP1
+0031   083B           00219         MOVF DISPBF_1,W
+0032   2???           00220         CALL D_CONV
+0033   0087           00221         MOVWF PORTC
+0034   1A20           00222         BTFSC GP_STATUS,DOT_SWT1
+0035   1587           00223         BSF PORTC,3
+0036   2???           00224         CALL P_CONV
+0037   1185           00225         BCF PORTA,3
+0038   1020           00226         BCF GP_STATUS,INT_SWT1
+0039   14A0           00227         BSF GP_STATUS,INT_SWT2
+003A   110B           00228         BCF INTCON,2
+003B   0008           00229         RETURN
+003C                  00230 DISP2
+003C   083C           00231         MOVF DISPBF_2,W
+003D   2???           00232         CALL D_CONV
+003E   0087           00233         MOVWF PORTC
+003F   1AA0           00234         BTFSC GP_STATUS,DOT_SWT2
+0040   1587           00235         BSF PORTC,3
+0041   2???           00236         CALL P_CONV
+0042   1105           00237         BCF PORTA,2
+0043   10A0           00238         BCF GP_STATUS,INT_SWT2
+0044   1520           00239         BSF GP_STATUS,INT_SWT3
+0045   110B           00240         BCF INTCON,2
+0046   0008           00241         RETURN
+0047                  00242 DISP3
+0047   083D           00243         MOVF DISPBF_3,W
+0048   2???           00244         CALL D_CONV
+0049   0087           00245         MOVWF PORTC
+004A   1B20           00246         BTFSC GP_STATUS,DOT_SWT3
+004B   1587           00247         BSF PORTC,3
+004C   2???           00248         CALL P_CONV
+004D   1106           00249         BCF PORTB,2
+004E   1120           00250         BCF GP_STATUS,INT_SWT3
+004F   15A0           00251         BSF GP_STATUS,INT_SWT4
+0050   110B           00252         BCF INTCON,2
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0051   0008           00253         RETURN
+0052                  00254 DISP4
+0052   083E           00255         MOVF DISPBF_4,W
+0053   2???           00256         CALL D_CONV
+0054   0087           00257         MOVWF PORTC
+0055   1BA0           00258         BTFSC GP_STATUS,DOT_SWT4
+0056   1587           00259         BSF PORTC,3
+0057   2???           00260         CALL P_CONV
+0058   1086           00261         BCF PORTB,1
+0059   11A0           00262         BCF GP_STATUS,INT_SWT4
+005A   110B           00263         BCF INTCON,2
+005B   0008           00264         RETURN
+005C                  00265 DISP_LED
+005C   0187           00266         CLRF PORTC
+005D   1386           00267         BCF PORTB,7
+005E   1FA1           00268         BTFSS SWT_STATUS,LED_SWT1
+005F   1787           00269         BSF PORTC,7
+0060   1F21           00270         BTFSS SWT_STATUS,LED_SWT2
+0061   1707           00271         BSF PORTC,6
+0062   1EA1           00272         BTFSS SWT_STATUS,LED_SWT3
+0063   1687           00273         BSF PORTC,5
+0064   1786           00274         BSF PORTB,7
+0065   1420           00275         BSF GP_STATUS,INT_SWT1
+0066   0AA9           00276         INCF INT_CNT,F
+0067   110B           00277         BCF INTCON,2
+0068   0008           00278         RETURN
+                      00279 
+                      00280 ;######################
+                      00281 ; P_CONV
+                      00282 ; PORTC[4] -> PORTA[1]
+                      00283 ; PORTC[3] -> PORTB[0]
+                      00284 ;######################
+0069                  00285 P_CONV
+0069   1485           00286         BSF             PORTA, 1
+006A   1E07           00287         BTFSS           PORTC, 4
+006B   1085           00288         BCF             PORTA, 1
+006C   1406           00289         BSF             PORTB, 0
+006D   1D87           00290         BTFSS           PORTC, 3
+006E   1005           00291         BCF             PORTA, 0
+006F   0008           00292         RETURN
+                      00293 
+                      00294 ;######################
+                      00295 ; ANL_MOD
+                      00296 ; get some cool-down for ADC
+                      00297 ;######################
+0070                  00298 ANL_MOD
+0070   1921           00299         BTFSC SWT_STATUS,ANL_ENABLE
+0071   0008           00300         RETURN
+0072   082D           00301         MOVF ANL_CNT,W
+0073   1903           00302         BTFSC STATUS,ZF
+0074   2???           00303         GOTO ANL_GO
+0075   03AD           00304         DECF ANL_CNT,F
+0076   0008           00305         RETURN
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0077                  00306 ANL_GO
+0077   1521           00307         BSF SWT_STATUS,ANL_ENABLE
+0078   151F           00308         BSF ADCON0,2
+0079   0008           00309         RETURN
+                      00310 
+                      00311 ;######################
+                      00312 ; A_INTR
+                      00313 ;######################
+007A                  00314 A_INTR
+007A   081E           00315         MOVF ADRESH,W
+007B   00AC           00316         MOVWF RET_VOL
+007C   130C           00317         BCF PIR1,6
+007D   16A2           00318         BSF MOD_STATUS,AD_DONE
+007E   3020           00319         MOVLW .32
+007F   00AD           00320         MOVWF ANL_CNT
+0080   1121           00321         BCF SWT_STATUS,ANL_ENABLE
+0081   0008           00322         RETURN
+                      00323 
+                      00324 ;######################
+                      00325 ; BTD_MOD & BEEP_MOD
+                      00326 ; check time to use button and buzzer
+                      00327 ;######################
+0082                  00328 BTD_MOD
+0082   082B           00329         MOVF BT_DELAY,W
+0083   1903           00330         BTFSC STATUS,ZF
+0084   2???           00331         GOTO BEEP_MOD
+0085   03AB           00332         DECF BT_DELAY,F
+0086                  00333 BEEP_MOD
+0086   086F           00334         MOVF B_BEEP,W
+0087   1903           00335         BTFSC STATUS,ZF
+0088   0008           00336         RETURN
+0089   03EF           00337         DECF B_BEEP,F
+008A   0008           00338         RETURN
+                      00339 
+                      00340         ;--main
+008B                  00341 START_UP
+008B   1683           00342         BSF STATUS,RP0 ; BANK 1
+                      00343 ;######################
+                      00344 ; PORTA
+                      00345 ; 0 = Thermometer
+                      00346 ; 1:3 = FND (G, COM2, COM1)
+                      00347 ; 4 = buzzer
+                      00348 ;######################
+008C   3001           00349         MOVLW B'00000001'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+008D   0085           00350         MOVWF TRISA
+                      00351 ;######################
+                      00352 ; PORTB
+                      00353 ; 0:2 = FND (DP, COM4, COM3)
+                      00354 ; 3:5 = button
+                      00355 ; 6:7 = MOLEX5 (5, 4)
+                      00356 ; 7 also used on diode common
+                      00357 ;######################
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+008E   3038           00358         MOVLW B'00111000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+008F   0086           00359         MOVWF TRISB
+                      00360 ;######################
+                      00361 ; PORTC
+                      00362 ; 0:2 = FND (E, D, F)
+                      00363 ; 5:7 = FND (C, B, A)
+                      00364 ;######################
+0090   3000           00365         MOVLW B'00000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0091   0087           00366         MOVWF TRISC
+                      00367 ;######################
+                      00368 ; OPTION_REG
+                      00369 ; Timer 0 overflow after 1.024ms
+                      00370 ; 975 * 1.024 = 998.4 ms
+                      00371 ;######################
+0092   3001           00372         MOVLW B'00000001'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0093   0081           00373         MOVWF OPTION_REG
+                      00374 ;######################
+                      00375 ; ADCON1
+                      00376 ; Left-Justified
+                      00377 ; {D,D,D,D,D,D,D,A}
+                      00378 ;######################
+0094   300E           00379         MOVLW B'00001110'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0095   009F           00380         MOVWF ADCON1
+0096   1283           00381         BCF STATUS,RP0 ; BANK 0
+                      00382 ;######################
+                      00383 ; ADCON0
+                      00384 ; Fosc/32
+                      00385 ; use RA0 to AN0
+                      00386 ;######################
+0097   3081           00387         MOVLW B'10000001'
+0098   009F           00388         MOVWF ADCON0
+0099   018C           00389         CLRF PIR1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+009A   018C           00390         CLRF PIE1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+009B   170C           00391         BSF PIE1,6 ; ADC Interrupt Enable bit
+009C   168B           00392         BSF INTCON,5 ; Timer 0 Interrupt Enable bit
+009D   170B           00393         BSF INTCON,6 ; Peripheral Interrupt Enable bit
+009E   178B           00394         BSF INTCON,7 ; Global Interrupt Enable bit
+009F                  00395 DEFAULT_ST
+009F   01A0           00396         CLRF GP_STATUS
+00A0   01A1           00397         CLRF SWT_STATUS
+00A1   3001           00398         MOVLW B'00000001'
+00A2   00A2           00399         MOVWF MOD_STATUS
+00A3   01A2           00400         CLRF MOD_STATUS
+00A4   01A3           00401         CLRF CLK_STATUS
+00A5   01A4           00402         CLRF SP_STATUS
+00A6   01A5           00403         CLRF STACK_NUM
+00A7   01A9           00404         CLRF INT_CNT
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00A8   01A9           00405         CLRF INT_CNT
+00A9   01AA           00406         CLRF B_DELAY
+00AA   01AB           00407         CLRF BT_DELAY
+00AB   01AE           00408         CLRF TBF_CNT
+00AC   01AD           00409         CLRF ANL_CNT
+00AD   01E0           00410         CLRF D_1SEC
+00AE   01E1           00411         CLRF D_10SEC
+00AF   01E2           00412         CLRF D_1MIN
+00B0   01E3           00413         CLRF D_10MIN
+00B1   01E4           00414         CLRF D_1HR
+00B2   01E5           00415         CLRF D_10HR
+00B3   01E6           00416         CLRF D_THR
+00B4                  00417 LOOP_START
+00B4                  00418 CK_LPS
+00B4   3031           00419         MOVLW .49
+00B5   0229           00420         SUBWF INT_CNT,W
+00B6   1D03           00421         BTFSS STATUS,ZF
+00B7   2???           00422         GOTO XLOOP
+00B8   2???           00423         GOTO DOT_LOOP
+00B9                  00424 DOT_LOOP
+00B9   01A9           00425         CLRF INT_CNT
+00BA   0824           00426         MOVF SP_STATUS,W
+00BB   3903           00427         ANDLW B'00000011'
+00BC   00ED           00428         MOVWF MAIN_BF
+00BD   3003           00429         MOVLW .3
+00BE   026D           00430         SUBWF MAIN_BF,W
+00BF   1903           00431         BTFSC STATUS,ZF 
+00C0   2???           00432         GOTO CK_LOOP_S
+00C1   0AA4           00433         INCF SP_STATUS,F
+00C2   2???           00434         GOTO XLOOP
+00C3                  00435 CK_LOOP_S
+Message[305]: Using default destination of 1 (file).
+00C3   0AA9           00436         INCF INT_CNT
+00C4   10A4           00437         BCF SP_STATUS, DOT_CHECK2
+00C5   1024           00438         BCF SP_STATUS, DOT_CHECK1
+00C6   1D24           00439         BTFSS SP_STATUS, DOT_SEC
+00C7   2???           00440         GOTO CK_LOOP_S2
+00C8   1124           00441         BCF SP_STATUS,DOT_SEC
+00C9   2???           00442         GOTO CK_LOOP
+00CA                  00443 CK_LOOP_S2
+00CA   1524           00444         BSF SP_STATUS,DOT_SEC
+00CB   2???           00445         GOTO CK_LOOP
+00CC                  00446 CK_LOOP
+Message[305]: Using default destination of 1 (file).
+00CC   0AE0           00447         INCF D_1SEC
+00CD   300A           00448         MOVLW .10
+00CE   0260           00449         SUBWF D_1SEC,W
+00CF   1D03           00450         BTFSS STATUS,ZF
+00D0   2???           00451         GOTO XLOOP
+00D1   01E0           00452         CLRF D_1SEC
+Message[305]: Using default destination of 1 (file).
+00D2   0AE1           00453         INCF D_10SEC
+00D3   3006           00454         MOVLW .6
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00D4   0261           00455         SUBWF D_10SEC,W
+00D5   1D03           00456         BTFSS STATUS,ZF
+00D6   2???           00457         GOTO XLOOP
+00D7   01E1           00458         CLRF D_10SEC
+Message[305]: Using default destination of 1 (file).
+00D8   0AE2           00459         INCF D_1MIN
+00D9   300A           00460         MOVLW .10
+00DA   0262           00461         SUBWF D_1MIN,W
+00DB   1D03           00462         BTFSS STATUS,ZF
+00DC   2???           00463         GOTO XLOOP
+00DD   01E2           00464         CLRF D_1MIN
+Message[305]: Using default destination of 1 (file).
+00DE   0AE3           00465         INCF D_10MIN
+00DF   3006           00466         MOVLW .6
+00E0   0263           00467         SUBWF D_10MIN,W
+00E1   1D03           00468         BTFSS STATUS,ZF
+00E2   2???           00469         GOTO XLOOP
+00E3   01E3           00470         CLRF D_10MIN
+Message[305]: Using default destination of 1 (file).
+00E4   0AE4           00471         INCF D_1HR
+Message[305]: Using default destination of 1 (file).
+00E5   0AE6           00472         INCF D_THR
+00E6   300A           00473         MOVLW .10
+00E7   0264           00474         SUBWF D_1HR,W
+00E8   1D03           00475         BTFSS STATUS,ZF
+00E9   2???           00476         GOTO CK_LOOP_2
+00EA   01E4           00477         CLRF D_1HR
+Message[305]: Using default destination of 1 (file).
+00EB   0AE5           00478         INCF D_10HR
+00EC   2???           00479         GOTO XLOOP
+00ED                  00480 CK_LOOP_2
+00ED   3018           00481         MOVLW .24
+00EE   0266           00482         SUBWF D_THR,W
+00EF   1D03           00483         BTFSS STATUS,ZF
+00F0   2???           00484         GOTO XLOOP
+00F1   01E6           00485         CLRF D_THR
+00F2   01E4           00486         CLRF D_1HR
+00F3   01E5           00487         CLRF D_10HR
+00F4   2???           00488         GOTO XLOOP
+00F5                  00489 XLOOP
+00F5   2???           00490         GOTO DISPBF_CONTROL
+00F6                  00491 XLOOP_END
+00F6                  00492 THLOOP
+00F6   1AA2           00493         BTFSC MOD_STATUS,AD_DONE
+00F7   2???           00494         CALL TH_CONTROL
+00F8                  00495 BT_LOOP
+                      00496 ;######################
+                      00497 ; Way to check Button-Input
+                      00498 ; 1. Chattering delay is zero? -> if true, ignore input signal.
+                      00499 ; 2. Button is floating? -> if false, ignore input signal. (until button is floating)
+                      00500 ; 3. goto subroutine
+                      00501 ;######################
+00F8   082B           00502         MOVF BT_DELAY,W
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00F9   1D03           00503         BTFSS STATUS,ZF
+00FA   2???           00504         GOTO L_LOOP
+00FB   18A1           00505         BTFSC SWT_STATUS,BT_ENABLE
+00FC   2???           00506         GOTO BT_LOOP1
+00FD                  00507 BT_CHECK
+00FD   0806           00508         MOVF PORTB,W
+00FE   391C           00509         ANDLW B'00011100'
+00FF   3A1C           00510         XORLW B'00011100'
+0100   1D03           00511         BTFSS STATUS,ZF
+0101   2???           00512         GOTO L_LOOP
+0102   14A1           00513         BSF SWT_STATUS,BT_ENABLE        
+0103                  00514 BT_LOOP1
+0103   1986           00515         BTFSC PORTB,3
+0104   2???           00516         GOTO BT_LOOP2
+0105   10A1           00517         BCF SWT_STATUS,BT_ENABLE
+0106   2???           00518         CALL BEEP_2
+0107   307F           00519         MOVLW 7FH
+0108   00AB           00520         MOVWF BT_DELAY
+0109   2???           00521         CALL BT_1
+010A   2???           00522         GOTO L_LOOP
+010B                  00523 BT_LOOP2
+010B   1A06           00524         BTFSC PORTB,4
+010C   2???           00525         GOTO BT_LOOP3
+010D   10A1           00526         BCF SWT_STATUS,BT_ENABLE
+010E   2???           00527         CALL BEEP_2
+010F   307F           00528         MOVLW 7FH
+0110   00AB           00529         MOVWF BT_DELAY
+0111   2???           00530         CALL BT_2
+0112   2???           00531         GOTO L_LOOP
+0113                  00532 BT_LOOP3
+0113   1A86           00533         BTFSC PORTB,5
+0114   2???           00534         GOTO L_LOOP
+0115   10A1           00535         BCF SWT_STATUS,BT_ENABLE
+0116   2???           00536         CALL BEEP_2
+0117   307F           00537         MOVLW 7FH
+0118   00AB           00538         MOVWF BT_DELAY
+0119   2???           00539         CALL BT_3
+011A   2???           00540         GOTO L_LOOP
+011B                  00541 BT_LOOP_END
+011B                  00542 L_LOOP
+011B   2???           00543         CALL BUZZ_BEEP_MOD
+011C   2???           00544         CALL BUZZ_CTR
+011D   2???           00545         GOTO LOOP_START
+                      00546 
+                      00547 ;######################
+                      00548 ;Buzzer is on when B_BEEL > 0 && B_BEEPALLOW == 0 && B_BEEPTEMPO == 0
+                      00549 ;######################
+011E                  00550 BUZZ_CTR
+011E   086F           00551         MOVF B_BEEP,W
+011F   1903           00552         BTFSC STATUS,ZF 
+0120   2???           00553         GOTO BUZZ_OFF
+0121   18BF           00554         BTFSC BEEP_STATUS,B_BEEPALLOW
+0122   2???           00555         GOTO BUZZ_OFF
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0123   193F           00556         BTFSC BEEP_STATUS,B_BEEPTEMPO
+0124   2???           00557         GOTO BUZZ_OFF
+0125                  00558 BUZZ_ON
+0125   1605           00559         BSF PORTA,4
+0126   0008           00560         RETURN
+0127                  00561 BUZZ_OFF
+0127   1205           00562         BCF PORTA,4
+0128   0008           00563         RETURN
+                      00564 
+                      00565 ;###################### 
+                      00566 ; if (B_BEEP == 0)
+                      00567 ;  B_BEEP_CNT--; B_BEEP = 122;
+                      00568 ;  B_PRES == 1 : B_BEEP / 2;
+                      00569 ; if (B_BEEP_CNT == 0)
+                      00570 ;  B_BEEP_EB--; B_BEEP_CNT = 8;
+                      00571 ; When B_BEEP_EB decrease, B_BEEPTEMPO toggle.
+                      00572 ; When B_BEEP_CNT decrease, B_BEEPALLOW toggle.
+                      00573 ;######################
+0129                  00574 BUZZ_BEEP_MOD
+Message[305]: Using default destination of 1 (file).
+0129   08EF           00575         MOVF B_BEEP
+012A   1D03           00576         BTFSS STATUS, ZF
+012B   0008           00577         RETURN
+Message[305]: Using default destination of 1 (file).
+012C   08F0           00578         MOVF B_BEEP_CNT
+012D   1D03           00579         BTFSS STATUS,ZF
+012E   2???           00580         GOTO BEEP_MAIN
+012F                  00581 BEEP_SWT2
+Message[305]: Using default destination of 1 (file).
+012F   08F1           00582         MOVF B_BEEP_EB
+0130   1903           00583         BTFSC STATUS,ZF
+0131   0008           00584         RETURN
+Message[305]: Using default destination of 1 (file).
+0132   03F1           00585         DECF B_BEEP_EB
+0133   3008           00586         MOVLW .8
+0134   00F0           00587         MOVWF B_BEEP_CNT
+0135   10BF           00588         BCF BEEP_STATUS,B_BEEPALLOW
+0136   193F           00589         BTFSC BEEP_STATUS,B_BEEPTEMPO
+0137   2???           00590         GOTO CLEAR_BEEPTEM
+0138   153F           00591         BSF BEEP_STATUS,B_BEEPTEMPO
+0139   2???           00592         GOTO BEEP_MAIN
+013A                  00593 CLEAR_BEEPTEM
+013A   113F           00594         BCF BEEP_STATUS,B_BEEPTEMPO
+013B   2???           00595         GOTO BEEP_MAIN
+013C                  00596 BEEP_MAIN
+Message[305]: Using default destination of 1 (file).
+013C   03F0           00597         DECF B_BEEP_CNT
+013D   19BF           00598         BTFSC BEEP_STATUS,B_PRES
+013E   2???           00599         GOTO BEEP_MAIN1
+013F   307A           00600         MOVLW .122
+0140   2???           00601         GOTO BEEP_MAIN2
+0141                  00602 BEEP_MAIN1
+0141   303D           00603         MOVLW .61
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0142                  00604 BEEP_MAIN2
+0142   00EF           00605         MOVWF B_BEEP
+0143   18BF           00606         BTFSC BEEP_STATUS,B_BEEPALLOW
+0144   2???           00607         GOTO CLEAR_BEEP
+0145   14BF           00608         BSF BEEP_STATUS,B_BEEPALLOW
+0146   0008           00609         RETURN
+0147                  00610 CLEAR_BEEP
+0147   10BF           00611         BCF BEEP_STATUS,B_BEEPALLOW
+0148   0008           00612         RETURN
+0149                  00613 BEEP_1 ; beep 0.5sec
+0149   01F0           00614         CLRF B_BEEP_CNT
+014A   01F1           00615         CLRF B_BEEP_EB
+014B   30F4           00616         MOVLW .244
+014C   00EF           00617         MOVWF B_BEEP
+014D   10BF           00618         BCF BEEP_STATUS,B_BEEPALLOW
+014E   113F           00619         BCF BEEP_STATUS,B_BEEPTEMPO
+014F   0008           00620         RETURN
+0150                  00621 BEEP_2 ; beep very short
+0150   01F0           00622         CLRF B_BEEP_CNT
+0151   01F1           00623         CLRF B_BEEP_EB
+0152   300F           00624         MOVLW .15
+0153   00EF           00625         MOVWF B_BEEP
+0154   10BF           00626         BCF BEEP_STATUS,B_BEEPALLOW
+0155   113F           00627         BCF BEEP_STATUS,B_BEEPTEMPO
+0156   0008           00628         RETURN
+0157                  00629 BEEP_3 ; beep-beep-!
+0157   01EF           00630         CLRF B_BEEP
+0158   01F1           00631         CLRF B_BEEP_EB
+0159   3004           00632         MOVLW .4
+015A   00F0           00633         MOVWF B_BEEP_CNT
+015B   10BF           00634         BCF BEEP_STATUS,B_BEEPALLOW
+015C   113F           00635         BCF BEEP_STATUS,B_BEEPTEMPO
+015D   11BF           00636         BCF BEEP_STATUS,B_PRES
+015E   0008           00637         RETURN
+015F                  00638 BEEP_4 ; beep * 4
+015F   01EF           00639         CLRF B_BEEP
+0160   01F0           00640         CLRF B_BEEP_CNT
+0161   3008           00641         MOVLW .8
+0162   00F1           00642         MOVWF B_BEEP_EB
+0163   14BF           00643         BSF BEEP_STATUS,B_BEEPALLOW
+0164   153F           00644         BSF BEEP_STATUS,B_BEEPTEMPO
+0165   15BF           00645         BSF BEEP_STATUS,B_PRES
+0166   0008           00646         RETURN
+                      00647 
+0167                  00648 TH_CONTROL
+0167   12A2           00649         BCF MOD_STATUS,AD_DONE
+0168   182E           00650         BTFSC TBF_CNT, 0
+0169   2???           00651         GOTO TH_CONT_0
+016A   18AE           00652         BTFSC TBF_CNT, 1
+016B   2???           00653         GOTO TH_CONT_1
+016C   192E           00654         BTFSC TBF_CNT, 2
+016D   2???           00655         GOTO TH_CONT_2
+016E   19AE           00656         BTFSC TBF_CNT, 3
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+016F   2???           00657         GOTO TH_CONT_3
+0170   1A2E           00658         BTFSC TBF_CNT, 4
+0171   2???           00659         GOTO TH_CONT_4
+0172   1AAE           00660         BTFSC TBF_CNT, 5
+0173   2???           00661         GOTO TH_CONT_5
+0174   1B2E           00662         BTFSC TBF_CNT, 6
+0175   2???           00663         GOTO TH_CONT_6
+0176   2???           00664         GOTO TH_CONT_7
+0177                  00665 TH_CONT_0
+0177   082C           00666         MOVF RET_VOL,W
+0178   00AF           00667         MOVWF TBF_BF
+0179   01B0           00668         CLRF THBF_HALF
+017A   182F           00669         BTFSC TBF_BF,0
+017B   0AB0           00670         INCF THBF_HALF,F
+017C   0CAF           00671         RRF TBF_BF,F
+017D   082F           00672         MOVF TBF_BF,W
+017E   00B1           00673         MOVWF THBF_1
+017F   102E           00674         BCF TBF_CNT,0
+0180   14AE           00675         BSF TBF_CNT,1
+0181   0008           00676         RETURN
+0182                  00677 TH_CONT_1
+0182   082C           00678         MOVF RET_VOL,W
+0183   00AF           00679         MOVWF TBF_BF
+0184   182F           00680         BTFSC TBF_BF,0
+0185   0AB0           00681         INCF THBF_HALF,F
+0186   0CAF           00682         RRF TBF_BF,F
+0187   082F           00683         MOVF TBF_BF,W
+Message[305]: Using default destination of 1 (file).
+0188   07B1           00684         ADDWF THBF_1
+0189   18B0           00685         BTFSC THBF_HALF,1
+018A   0AB1           00686         INCF THBF_1,F
+018B   10AE           00687         BCF TBF_CNT,1
+018C   152E           00688         BSF TBF_CNT,2
+018D   0008           00689         RETURN
+018E                  00690 TH_CONT_2
+018E   082C           00691         MOVF RET_VOL,W
+018F   00AF           00692         MOVWF TBF_BF
+0190   01B0           00693         CLRF THBF_HALF
+0191   182F           00694         BTFSC TBF_BF,0
+0192   0AB0           00695         INCF THBF_HALF,F
+0193   0CAF           00696         RRF TBF_BF,F
+0194   082F           00697         MOVF TBF_BF,W
+0195   00B2           00698         MOVWF THBF_2
+0196   112E           00699         BCF TBF_CNT,2
+0197   15AE           00700         BSF TBF_CNT,3
+0198   0008           00701         RETURN
+0199                  00702 TH_CONT_3
+0199   082C           00703         MOVF RET_VOL,W
+019A   00AF           00704         MOVWF TBF_BF
+019B   182F           00705         BTFSC TBF_BF,0
+019C   0AB0           00706         INCF THBF_HALF,F
+019D   0CAF           00707         RRF TBF_BF,F
+019E   082F           00708         MOVF TBF_BF,W
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[305]: Using default destination of 1 (file).
+019F   07B2           00709         ADDWF THBF_2
+01A0   18B0           00710         BTFSC THBF_HALF,1
+01A1   0AB1           00711         INCF THBF_1,F
+01A2   11AE           00712         BCF TBF_CNT,3
+01A3   162E           00713         BSF TBF_CNT,4
+01A4   0008           00714         RETURN
+01A5                  00715 TH_CONT_4
+01A5   082C           00716         MOVF RET_VOL,W
+01A6   00AF           00717         MOVWF TBF_BF
+01A7   01B0           00718         CLRF THBF_HALF
+01A8   182F           00719         BTFSC TBF_BF,0
+01A9   0AB0           00720         INCF THBF_HALF,F
+01AA   0CAF           00721         RRF TBF_BF,F
+01AB   082F           00722         MOVF TBF_BF,W
+01AC   00B3           00723         MOVWF THBF_3
+01AD   122E           00724         BCF TBF_CNT,4
+01AE   16AE           00725         BSF TBF_CNT,5
+01AF   0008           00726         RETURN
+01B0                  00727 TH_CONT_5
+01B0   082C           00728         MOVF RET_VOL,W
+01B1   00AF           00729         MOVWF TBF_BF
+01B2   182F           00730         BTFSC TBF_BF,0
+01B3   0AB0           00731         INCF THBF_HALF,F
+01B4   0CAF           00732         RRF TBF_BF,F
+01B5   082F           00733         MOVF TBF_BF,W
+Message[305]: Using default destination of 1 (file).
+01B6   07B3           00734         ADDWF THBF_3
+01B7   18B0           00735         BTFSC THBF_HALF,1
+01B8   0AB1           00736         INCF THBF_1,F
+01B9   12AE           00737         BCF TBF_CNT,5
+01BA   172E           00738         BSF TBF_CNT,6
+01BB   0008           00739         RETURN
+01BC                  00740 TH_CONT_6
+01BC   082C           00741         MOVF RET_VOL,W
+01BD   00AF           00742         MOVWF TBF_BF
+01BE   01B0           00743         CLRF THBF_HALF
+01BF   182F           00744         BTFSC TBF_BF,0
+01C0   0AB0           00745         INCF THBF_HALF,F
+01C1   0CAF           00746         RRF TBF_BF,F
+01C2   082F           00747         MOVF TBF_BF,W
+01C3   00B4           00748         MOVWF THBF_4
+01C4   132E           00749         BCF TBF_CNT,6
+01C5   17AE           00750         BSF TBF_CNT,7
+01C6   0008           00751         RETURN
+01C7                  00752 TH_CONT_7
+01C7   082C           00753         MOVF RET_VOL,W
+01C8   00AF           00754         MOVWF TBF_BF
+01C9   182F           00755         BTFSC TBF_BF,0
+01CA   0AB0           00756         INCF THBF_HALF,F
+01CB   0CAF           00757         RRF TBF_BF,F
+01CC   082F           00758         MOVF TBF_BF,W
+Message[305]: Using default destination of 1 (file).
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01CD   07B4           00759         ADDWF THBF_4
+01CE   18B0           00760         BTFSC THBF_HALF,1
+01CF   0AB1           00761         INCF THBF_1,F
+01D0   01B0           00762         CLRF THBF_HALF
+01D1   1831           00763         BTFSC THBF_1,0
+01D2   0AB0           00764         INCF THBF_HALF,F
+01D3   1832           00765         BTFSC THBF_2,0
+01D4   0AB0           00766         INCF THBF_HALF,F        
+Message[305]: Using default destination of 1 (file).
+01D5   0CB1           00767         RRF THBF_1
+Message[305]: Using default destination of 1 (file).
+01D6   0CB2           00768         RRF THBF_2
+01D7   0831           00769         MOVF THBF_1,W
+Message[305]: Using default destination of 1 (file).
+01D8   07B2           00770         ADDWF THBF_2
+01D9   18B0           00771         BTFSC THBF_HALF,1
+01DA   0AB2           00772         INCF THBF_2,F   
+01DB   01B0           00773         CLRF THBF_HALF
+01DC   1833           00774         BTFSC THBF_3,0
+01DD   0AB0           00775         INCF THBF_HALF,F
+01DE   1834           00776         BTFSC THBF_4,0
+01DF   0AB0           00777         INCF THBF_HALF,F
+Message[305]: Using default destination of 1 (file).
+01E0   0CB3           00778         RRF THBF_3
+Message[305]: Using default destination of 1 (file).
+01E1   0CB4           00779         RRF THBF_4
+01E2   0833           00780         MOVF THBF_3,W
+Message[305]: Using default destination of 1 (file).
+01E3   07B4           00781         ADDWF THBF_4
+01E4   18B0           00782         BTFSC THBF_HALF,1
+01E5   0AB4           00783         INCF THBF_4,F           
+01E6   01B0           00784         CLRF THBF_HALF
+01E7   1832           00785         BTFSC THBF_2,0
+01E8   0AB0           00786         INCF THBF_HALF,F
+01E9   1834           00787         BTFSC THBF_4,0
+01EA   0AB0           00788         INCF THBF_HALF,F
+Message[305]: Using default destination of 1 (file).
+01EB   0CB2           00789         RRF THBF_2
+Message[305]: Using default destination of 1 (file).
+01EC   0CB4           00790         RRF THBF_4
+01ED   0832           00791         MOVF THBF_2,W
+Message[305]: Using default destination of 1 (file).
+01EE   07B4           00792         ADDWF THBF_4
+01EF   18B0           00793         BTFSC THBF_HALF,1
+01F0   0AB4           00794         INCF THBF_4,F
+01F1   0834           00795         MOVF THBF_4,W
+01F2   00AF           00796         MOVWF TBF_BF
+01F3   0C2F           00797         RRF TBF_BF,W
+Message[305]: Using default destination of 1 (file).
+01F4   07B4           00798         ADDWF THBF_4
+01F5   0834           00799         MOVF THBF_4,W
+01F6   00B8           00800         MOVWF CR_TH
+01F7   13AE           00801         BCF TBF_CNT,7
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01F8   142E           00802         BSF TBF_CNT,0
+01F9   0008           00803         RETURN
+01FA                  00804 TH_CALC
+01FA   01B5           00805         CLRF T_1
+01FB   01B6           00806         CLRF T_10
+01FC   01B7           00807         CLRF T_100
+01FD                  00808 TH_CALC_LOOP
+01FD   083A           00809         MOVF CR_TH_BUFF,W
+01FE   1903           00810         BTFSC STATUS,ZF
+01FF   0008           00811         RETURN
+0200   03BA           00812         DECF CR_TH_BUFF,F
+0201   0AB5           00813         INCF T_1,F
+0202   300A           00814         MOVLW .10
+0203   0235           00815         SUBWF T_1,W
+0204   1D03           00816         BTFSS STATUS,ZF
+0205   2???           00817         GOTO TH_CALC_LOOP
+0206   01B5           00818         CLRF T_1
+Message[305]: Using default destination of 1 (file).
+0207   0AB6           00819         INCF T_10
+0208   300A           00820         MOVLW .10
+0209   0236           00821         SUBWF T_10,W
+020A   1D03           00822         BTFSS STATUS,ZF
+020B   2???           00823         GOTO TH_CALC_LOOP
+020C   01B6           00824         CLRF T_10
+Message[305]: Using default destination of 1 (file).
+020D   0AB7           00825         INCF T_100
+020E   2???           00826         GOTO TH_CALC_LOOP
+                      00827 
+020F                  00828 DOT_1_ON_BLINK
+020F   1824           00829         BTFSC SP_STATUS, DOT_CHECK1
+0210   2???           00830         GOTO DOT_1_OFF
+0211   2???           00831         GOTO DOT_1_ON 
+0212                  00832 DOT_1_OFF
+0212   1220           00833         BCF GP_STATUS, DOT_SWT1
+0213   0008           00834         RETURN
+0214                  00835 DOT_1_ON
+0214   1620           00836         BSF GP_STATUS, DOT_SWT1
+0215   0008           00837         RETURN  
+                      00838         
+0216                  00839 DOT_2_ON_BLINK
+0216   1824           00840         BTFSC SP_STATUS, DOT_CHECK1
+0217   2???           00841         GOTO DOT_2_OFF
+0218   2???           00842         GOTO DOT_2_ON 
+0219                  00843 DOT_2_OFF
+0219   12A0           00844         BCF GP_STATUS, DOT_SWT2
+021A   0008           00845         RETURN
+021B                  00846 DOT_2_ON
+021B   16A0           00847         BSF GP_STATUS, DOT_SWT2
+021C   0008           00848         RETURN  
+                      00849         
+021D                  00850 DOT_3_ON_BLINK
+021D   1824           00851         BTFSC SP_STATUS, DOT_CHECK1
+021E   2???           00852         GOTO DOT_3_OFF
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+021F   2???           00853         GOTO DOT_3_ON 
+0220                  00854 DOT_3_OFF
+0220   1320           00855         BCF GP_STATUS, DOT_SWT3
+0221   0008           00856         RETURN
+0222                  00857 DOT_3_ON
+0222   1720           00858         BSF GP_STATUS, DOT_SWT3
+0223   0008           00859         RETURN
+                      00860         
+0224                  00861 DOT_4_ON_BLINK
+0224   1824           00862         BTFSC SP_STATUS, DOT_CHECK1
+0225   2???           00863         GOTO DOT_4_OFF
+0226   2???           00864         GOTO DOT_4_ON 
+0227                  00865 DOT_4_OFF       
+0227   13A0           00866         BCF GP_STATUS, DOT_SWT4
+0228   0008           00867         RETURN
+0229                  00868 DOT_4_ON
+0229   17A0           00869         BSF GP_STATUS, DOT_SWT4
+022A   0008           00870         RETURN
+                      00871 
+                      00872 ;######################
+                      00873 ;Stack structure
+                      00874 ;######################
+                      00875 ;RST_FSR
+                      00876 ; reset FSR
+                      00877 ;######################
+022B                  00878 RST_FSR
+022B   3040           00879         MOVLW 40H
+022C   0084           00880         MOVWF FSR
+022D   0008           00881         RETURN
+                      00882 
+                      00883 ;######################
+                      00884 ;PUSH_STACK / POP_STACK
+                      00885 ;######################
+022E                  00886 PUSH_STACK
+022E   0080           00887         MOVWF INDF
+022F   0A84           00888         INCF FSR,F
+0230   0008           00889         RETURN
+                      00890 
+0231                  00891 POP_STACK
+0231   0384           00892         DECF FSR,F
+0232   0800           00893         MOVF INDF,W
+0233   0180           00894         CLRF INDF
+0234   0008           00895         RETURN
+                      00896         
+                      00897 ;######################
+                      00898 ;LAP_REG
+                      00899 ; SEC - MIN - HR - TEMP, push 4 time.
+                      00900 ;######################
+0235                  00901 LAP_REG
+0235   0E61           00902         SWAPF D_10SEC,W
+0236   00EE           00903         MOVWF STACK_BF
+0237   0860           00904         MOVF D_1SEC,W
+Message[305]: Using default destination of 1 (file).
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0238   07EE           00905         ADDWF STACK_BF
+0239   086E           00906         MOVF STACK_BF,W
+023A   2???           00907         CALL PUSH_STACK
+023B   0E63           00908         SWAPF D_10MIN,W
+023C   00EE           00909         MOVWF STACK_BF
+023D   0862           00910         MOVF D_1MIN,W
+Message[305]: Using default destination of 1 (file).
+023E   07EE           00911         ADDWF STACK_BF
+023F   086E           00912         MOVF STACK_BF,W
+0240   2???           00913         CALL PUSH_STACK
+0241   0E65           00914         SWAPF D_10HR,W
+0242   00EE           00915         MOVWF STACK_BF
+0243   0864           00916         MOVF D_1HR,W
+Message[305]: Using default destination of 1 (file).
+0244   07EE           00917         ADDWF STACK_BF
+0245   086E           00918         MOVF STACK_BF,W
+0246   2???           00919         CALL PUSH_STACK
+0247   0838           00920         MOVF CR_TH,W
+0248   2???           00921         CALL PUSH_STACK
+0249   0008           00922         RETURN
+                      00923 
+                      00924 ;######################
+                      00925 ;LAP_POP
+                      00926 ; TEMP - HR - MIN - SEC, pop 4 time.
+                      00927 ;######################
+024A                  00928 LAP_POP
+024A   2???           00929         CALL POP_STACK
+024B   00B9           00930         MOVWF CR_TH_LAP
+024C   2???           00931         CALL POP_STACK
+024D   00EE           00932         MOVWF STACK_BF
+024E   390F           00933         ANDLW 0FH
+024F   00EB           00934         MOVWF D_1HR_B
+0250   0E6E           00935         SWAPF STACK_BF,W
+0251   390F           00936         ANDLW 0FH
+0252   00EC           00937         MOVWF D_10HR_B
+0253   2???           00938         CALL POP_STACK
+0254   00EE           00939         MOVWF STACK_BF
+0255   390F           00940         ANDLW 0FH
+0256   00E9           00941         MOVWF D_1MIN_B
+0257   0E6E           00942         SWAPF STACK_BF,W
+0258   390F           00943         ANDLW 0FH
+0259   00EA           00944         MOVWF D_10MIN_B
+025A   2???           00945         CALL POP_STACK
+025B   00EE           00946         MOVWF STACK_BF
+025C   390F           00947         ANDLW 0FH
+025D   00E7           00948         MOVWF D_1SEC_B
+025E   0E6E           00949         SWAPF STACK_BF,W
+025F   390F           00950         ANDLW 0FH
+0260   00E8           00951         MOVWF D_10SEC_B
+0261   0008           00952         RETURN
+                      00953 
+0262                  00954 CLOCKMODY_RESET_SEC
+0262   01E0           00955         CLRF D_1SEC
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0263   01E1           00956         CLRF D_10SEC
+0264   0008           00957         RETURN
+                      00958 
+0265                  00959 CLOCKMODY_INCF_MIN
+Message[305]: Using default destination of 1 (file).
+0265   0AE2           00960         INCF D_1MIN
+0266   300A           00961         MOVLW .10
+0267   0262           00962         SUBWF D_1MIN,W
+0268   1D03           00963         BTFSS STATUS,ZF
+0269   0008           00964         RETURN
+026A   01E2           00965         CLRF D_1MIN
+Message[305]: Using default destination of 1 (file).
+026B   0AE3           00966         INCF D_10MIN
+026C   3006           00967         MOVLW .6
+026D   0263           00968         SUBWF D_10MIN,W
+026E   1D03           00969         BTFSS STATUS,ZF
+026F   0008           00970         RETURN
+0270   01E3           00971         CLRF D_10MIN
+0271   0008           00972         RETURN
+0272   0008           00973         RETURN
+                      00974         
+0273                  00975 CLOCKMODY_INCF_HOUR
+Message[305]: Using default destination of 1 (file).
+0273   0AE4           00976         INCF D_1HR
+Message[305]: Using default destination of 1 (file).
+0274   0AE6           00977         INCF D_THR
+0275   300A           00978         MOVLW .10
+0276   0264           00979         SUBWF D_1HR,W
+0277   1D03           00980         BTFSS STATUS,ZF
+0278   2???           00981         GOTO C_INCF_HR_2
+0279   01E4           00982         CLRF D_1HR
+Message[305]: Using default destination of 1 (file).
+027A   0AE5           00983         INCF D_10HR
+027B                  00984 C_INCF_HR_2
+027B   3018           00985         MOVLW .24
+027C   0266           00986         SUBWF D_THR,W
+027D   1D03           00987         BTFSS STATUS,ZF
+027E   0008           00988         RETURN
+027F   01E6           00989         CLRF D_THR
+0280   01E5           00990         CLRF D_10HR
+0281   01E4           00991         CLRF D_1HR
+0282   0008           00992         RETURN
+                      00993         
+0283                  00994 CLOCKMODY_DECF_MIN
+0283   0862           00995         MOVF D_1MIN,W
+0284   1903           00996         BTFSC STATUS,ZF
+0285   2???           00997         GOTO D_1MIN_ZF
+Message[305]: Using default destination of 1 (file).
+0286   03E2           00998         DECF D_1MIN
+0287   0008           00999         RETURN
+0288                  01000 D_1MIN_ZF
+0288   0863           01001         MOVF D_10MIN,W
+0289   1903           01002         BTFSC STATUS,ZF
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+028A   2???           01003         GOTO D_10MIN_ZF
+Message[305]: Using default destination of 1 (file).
+028B   03E3           01004         DECF D_10MIN
+028C   3009           01005         MOVLW .9
+028D   00E2           01006         MOVWF D_1MIN
+028E   0008           01007         RETURN
+028F                  01008 D_10MIN_ZF
+028F   3009           01009         MOVLW .9
+0290   00E2           01010         MOVWF D_1MIN
+0291   3005           01011         MOVLW .5
+0292   00E3           01012         MOVWF D_10MIN
+0293   0008           01013         RETURN
+                      01014 
+0294                  01015 CLOCKMODY_DECF_HOUR
+0294   0864           01016         MOVF D_1HR,W
+0295   1903           01017         BTFSC STATUS,ZF
+0296   2???           01018         GOTO D_1HR_ZF
+Message[305]: Using default destination of 1 (file).
+0297   03E4           01019         DECF D_1HR
+Message[305]: Using default destination of 1 (file).
+0298   03E6           01020         DECF D_THR
+0299   0008           01021         RETURN
+029A                  01022 D_1HR_ZF
+029A   0865           01023         MOVF D_10HR,W
+029B   1903           01024         BTFSC STATUS,ZF
+029C   2???           01025         GOTO D_10HR_ZF
+Message[305]: Using default destination of 1 (file).
+029D   03E5           01026         DECF D_10HR
+029E   3009           01027         MOVLW .9
+029F   00E4           01028         MOVWF D_1HR
+Message[305]: Using default destination of 1 (file).
+02A0   03E6           01029         DECF D_THR
+02A1   0008           01030         RETURN
+02A2                  01031 D_10HR_ZF
+02A2   3003           01032         MOVLW .3
+02A3   00E4           01033         MOVWF D_1HR
+02A4   3002           01034         MOVLW .2
+02A5   00E5           01035         MOVWF D_10HR
+02A6   3017           01036         MOVLW .23
+02A7   00E6           01037         MOVWF D_THR
+02A8   0008           01038         RETURN
+02A9   0008           01039         RETURN
+                      01040         
+02AA                  01041 MODE_CONV
+02AA   18A2           01042         BTFSC MOD_STATUS, MODE2
+02AB   2???           01043         GOTO CLOCK_TO_THER
+02AC   10A2           01044         BCF MOD_STATUS, MODE2
+02AD   1422           01045         BSF MOD_STATUS, MODE1
+02AE   0008           01046         RETURN
+02AF                  01047 CLOCK_TO_THER
+02AF   14A2           01048         BSF MOD_STATUS, MODE2
+02B0   1022           01049         BCF MOD_STATUS, MODE1
+02B1   0008           01050         RETURN
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01051 
+02B2                  01052 CHECK_NEXTLAP
+02B2   0872           01053         MOVF LAP_NUM,W
+02B3   1903           01054         BTFSC STATUS,ZF
+02B4   2???           01055         GOTO LAP_ENDED
+02B5   1221           01056         BCF SWT_STATUS, LAP_OV
+Message[305]: Using default destination of 1 (file).
+02B6   03F2           01057         DECF LAP_NUM
+02B7   2???           01058         CALL LAP_POP
+02B8   0872           01059         MOVF LAP_NUM,W
+02B9   1903           01060         BTFSC STATUS,ZF
+02BA   2???           01061         GOTO LAP_LAST
+02BB   0008           01062         RETURN
+02BC                  01063 LAP_LAST
+02BC   11A1           01064         BCF SWT_STATUS,LAP_EXT
+02BD   0008           01065         RETURN
+02BE                  01066 LAP_ENDED
+02BE   11A2           01067         BCF MOD_STATUS,MODE4
+02BF   0008           01068         RETURN
+                      01069 
+                      01070 ;######################
+                      01071 ;Display subroutine
+                      01072 ;######################
+02C0                  01073 DISPBF_CONTROL
+02C0   1220           01074         BCF GP_STATUS,DOT_SWT1
+02C1   12A0           01075         BCF GP_STATUS,DOT_SWT2
+02C2   1320           01076         BCF GP_STATUS,DOT_SWT3
+02C3   13A0           01077         BCF GP_STATUS,DOT_SWT4
+02C4   13A1           01078         BCF SWT_STATUS,LED_SWT1
+02C5   1321           01079         BCF SWT_STATUS,LED_SWT2
+02C6   12A1           01080         BCF SWT_STATUS,LED_SWT3
+02C7   19A2           01081         BTFSC MOD_STATUS, MODE4
+02C8   2???           01082         GOTO DISP_LAPCHECK
+02C9   1922           01083         BTFSC MOD_STATUS, MODE3
+02CA   2???           01084         GOTO DISP_CLOCKMODY
+02CB   18A2           01085         BTFSC MOD_STATUS, MODE2
+02CC   2???           01086         GOTO DISP_COMMON_CLOCK
+02CD   2???           01087         GOTO DISP_COMMON_THER
+02CE                  01088 DISP_COMMON_CLOCK
+02CE   2???           01089         CALL DOT_4_ON_BLINK
+02CF   1721           01090         BSF SWT_STATUS,LED_SWT2
+02D0   1C21           01091         BTFSS SWT_STATUS,HM_CONV
+02D1   2???           01092         GOTO DISP_COMMON_CLOCK_HM
+02D2   2???           01093         GOTO DISP_COMMON_CLOCK_MS
+02D3                  01094 DISP_COMMON_CLOCK_HM
+02D3   0862           01095         MOVF D_1MIN,W
+02D4   00BE           01096         MOVWF DISPBF_4
+02D5   0863           01097         MOVF D_10MIN,W
+02D6   00BD           01098         MOVWF DISPBF_3
+02D7   0864           01099         MOVF D_1HR,W
+02D8   00BC           01100         MOVWF DISPBF_2
+02D9   0865           01101         MOVF D_10HR,W
+02DA   00BB           01102         MOVWF DISPBF_1
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+02DB   2???           01103         GOTO XLOOP_END
+02DC                  01104 DISP_COMMON_CLOCK_MS
+02DC   0860           01105         MOVF D_1SEC,W
+02DD   00BE           01106         MOVWF DISPBF_4
+02DE   0861           01107         MOVF D_10SEC,W
+02DF   00BD           01108         MOVWF DISPBF_3
+02E0   0862           01109         MOVF D_1MIN,W
+02E1   00BC           01110         MOVWF DISPBF_2
+02E2   0863           01111         MOVF D_10MIN,W
+02E3   00BB           01112         MOVWF DISPBF_1
+02E4   2???           01113         GOTO XLOOP_END
+02E5                  01114 DISP_COMMON_THER
+02E5   2???           01115         CALL DOT_4_ON_BLINK
+02E6   17A1           01116         BSF SWT_STATUS,LED_SWT1
+02E7   0838           01117         MOVF CR_TH,W
+02E8   00BA           01118         MOVWF CR_TH_BUFF
+02E9   2???           01119         CALL TH_CALC
+02EA   0835           01120         MOVF T_1,W
+02EB   00BE           01121         MOVWF DISPBF_4
+02EC   0836           01122         MOVF T_10,W
+02ED   00BD           01123         MOVWF DISPBF_3
+02EE   0837           01124         MOVF T_100,W
+02EF   00BC           01125         MOVWF DISPBF_2
+02F0   0825           01126         MOVF STACK_NUM,W
+02F1   00BB           01127         MOVWF DISPBF_1
+02F2   2???           01128         GOTO XLOOP_END
+02F3                  01129 DISP_CLOCKMODY
+02F3   1721           01130         BSF SWT_STATUS,LED_SWT2
+02F4   1923           01131         BTFSC CLK_STATUS,SEC
+02F5   2???           01132         GOTO DISP_CLOCKMODY_SEC
+02F6   0860           01133         MOVF D_1SEC,W
+02F7   00BE           01134         MOVWF DISPBF_4
+02F8   0861           01135         MOVF D_10SEC,W
+02F9   00BD           01136         MOVWF DISPBF_3
+02FA   0862           01137         MOVF D_1MIN,W
+02FB   00BC           01138         MOVWF DISPBF_2
+02FC   0863           01139         MOVF D_10MIN,W
+02FD   00BB           01140         MOVWF DISPBF_1
+02FE   1823           01141         BTFSC CLK_STATUS,HOUR
+02FF   2???           01142         GOTO DISP_CLOCKMODY_HOUR
+0300   2???           01143         CALL DOT_3_ON_BLINK
+0301   2???           01144         CALL DOT_4_ON_BLINK
+0302   2???           01145         GOTO XLOOP_END
+0303                  01146 DISP_CLOCKMODY_HOUR
+0303   2???           01147         CALL DOT_1_ON_BLINK
+0304   2???           01148         CALL DOT_2_ON_BLINK
+0305   2???           01149         GOTO XLOOP_END
+0306                  01150 DISP_CLOCKMODY_SEC
+0306   0860           01151         MOVF D_1SEC,W
+0307   00BE           01152         MOVWF DISPBF_4
+0308   0861           01153         MOVF D_10SEC,W
+0309   00BD           01154         MOVWF DISPBF_3
+030A   0862           01155         MOVF D_1MIN,W
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+030B   00BC           01156         MOVWF DISPBF_2
+030C   0863           01157         MOVF D_10MIN,W
+030D   00BB           01158         MOVWF DISPBF_1
+030E   2???           01159         CALL DOT_3_ON_BLINK
+030F   2???           01160         CALL DOT_4_ON_BLINK
+0310   2???           01161         GOTO XLOOP_END
+0311                  01162 DISP_LAPCHECK
+0311   16A1           01163         BSF SWT_STATUS,LED_SWT3
+0312   18A2           01164         BTFSC MOD_STATUS, MODE2
+0313   2???           01165         GOTO DISP_CHECK_CLOCK
+0314   2???           01166         GOTO DISP_CHECK_THER
+0315                  01167 DISP_CHECK_CLOCK
+0315   1721           01168         BSF SWT_STATUS,LED_SWT2
+0316   1C21           01169         BTFSS SWT_STATUS,HM_CONV
+0317   2???           01170         GOTO DISP_CHECK_CLOCK_HM
+0318   2???           01171         GOTO DISP_CHECK_CLOCK_MS
+0319                  01172 DISP_CHECK_CLOCK_HM
+0319   0869           01173         MOVF D_1MIN_B,W
+031A   00BE           01174         MOVWF DISPBF_4
+031B   086A           01175         MOVF D_10MIN_B,W
+031C   00BD           01176         MOVWF DISPBF_3
+031D   086B           01177         MOVF D_1HR_B,W
+031E   00BC           01178         MOVWF DISPBF_2
+031F   086C           01179         MOVF D_10HR_B,W
+0320   00BB           01180         MOVWF DISPBF_1
+0321   2???           01181         GOTO XLOOP_END
+0322                  01182 DISP_CHECK_CLOCK_MS
+0322   0867           01183         MOVF D_1SEC_B,W
+0323   00BE           01184         MOVWF DISPBF_4
+0324   0868           01185         MOVF D_10SEC_B,W
+0325   00BD           01186         MOVWF DISPBF_3
+0326   0869           01187         MOVF D_1MIN_B,W
+0327   00BC           01188         MOVWF DISPBF_2
+0328   086A           01189         MOVF D_10MIN_B,W
+0329   00BB           01190         MOVWF DISPBF_1
+032A   2???           01191         GOTO XLOOP_END
+032B                  01192 DISP_CHECK_THER
+032B   17A1           01193         BSF SWT_STATUS,LED_SWT1
+032C   0839           01194         MOVF CR_TH_LAP,W
+032D   00BA           01195         MOVWF CR_TH_BUFF
+032E   2???           01196         CALL TH_CALC
+032F   0835           01197         MOVF T_1,W
+0330   00BE           01198         MOVWF DISPBF_4
+0331   0836           01199         MOVF T_10,W
+0332   00BD           01200         MOVWF DISPBF_3
+0333   0837           01201         MOVF T_100,W
+0334   00BC           01202         MOVWF DISPBF_2
+0335   0825           01203         MOVF STACK_NUM,W
+0336   00BB           01204         MOVWF DISPBF_1
+0337   2???           01205         GOTO XLOOP_END
+                      01206         
+                      01207 ;######################
+                      01208 ;Button subroutine
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01209 ;######################
+                      01210 
+0338                  01211 BT_1
+0338   19A2           01212         BTFSC MOD_STATUS, MODE4
+0339   2???           01213         GOTO BT_1_LAPCHECK
+033A   1922           01214         BTFSC MOD_STATUS, MODE3
+033B   2???           01215         GOTO BT_1_CLOCKMODY
+033C   18A2           01216         BTFSC MOD_STATUS, MODE2
+033D   2???           01217         GOTO BT_1_COMMON_CLOCK
+033E   2???           01218         GOTO BT_1_COMMON_THER
+033F                  01219 BT_2
+033F   1922           01220         BTFSC MOD_STATUS, MODE3
+0340   2???           01221         GOTO BT_2_CLOCKMODY
+0341   2???           01222         GOTO MODE_CONV
+0342                  01223 BT_3
+0342   19A2           01224         BTFSC MOD_STATUS, MODE4
+0343   2???           01225         GOTO BT_3_LAPCHECK
+0344   1922           01226         BTFSC MOD_STATUS, MODE3
+0345   2???           01227         GOTO BT_3_CLOCKMODY
+0346   18A2           01228         BTFSC MOD_STATUS, MODE2
+0347   2???           01229         GOTO BT_3_COMMON_CLOCK
+0348   2???           01230         GOTO BT_3_COMMON_THER
+                      01231 
+0349                  01232 BT_1_COMMON_THER
+0349   1A21           01233         BTFSC SWT_STATUS, LAP_OV
+034A   2???           01234         GOTO LAP_PLUS_OVER
+034B   15A1           01235         BSF SWT_STATUS,LAP_EXT
+Message[305]: Using default destination of 1 (file).
+034C   0AF2           01236         INCF LAP_NUM
+034D   2???           01237         CALL LAP_REG
+034E   1972           01238         BTFSC LAP_NUM,2
+034F   1621           01239         BSF SWT_STATUS, LAP_OV
+0350   0008           01240         RETURN
+0351                  01241 LAP_PLUS_OVER
+0351   2???           01242         CALL BEEP_2
+0352   0008           01243         RETURN
+                      01244         
+0353                  01245 BT_1_COMMON_CLOCK
+0353   1C21           01246         BTFSS SWT_STATUS, HM_CONV
+0354   2???           01247         GOTO HM_CONV_SET
+0355   1021           01248         BCF SWT_STATUS,HM_CONV
+0356   0008           01249         RETURN
+0357                  01250 HM_CONV_SET
+0357   1421           01251         BSF SWT_STATUS,HM_CONV
+0358   0008           01252         RETURN
+                      01253         
+0359                  01254 BT_1_CLOCKMODY
+0359   1923           01255         BTFSC CLK_STATUS, SEC
+035A   2???           01256         GOTO CLOCKMODY_RESET_SEC
+035B   18A3           01257         BTFSC CLK_STATUS, MIN
+035C   2???           01258         GOTO CLOCKMODY_INCF_MIN
+035D   1823           01259         BTFSC CLK_STATUS, HOUR
+035E   2???           01260         GOTO CLOCKMODY_INCF_HOUR
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01261         
+035F                  01262 BT_1_LAPCHECK
+                      01263         ; do nothing
+035F   0008           01264         RETURN
+                      01265         
+0360                  01266 BT_2_CLOCKMODY
+0360   1923           01267         BTFSC CLK_STATUS, SEC
+0361   2???           01268         GOTO CLOCKMODY_RESET_SEC
+0362   18A3           01269         BTFSC CLK_STATUS, MIN
+0363   2???           01270         GOTO CLOCKMODY_DECF_MIN
+0364   1823           01271         BTFSC CLK_STATUS, HOUR
+0365   2???           01272         GOTO CLOCKMODY_DECF_HOUR
+                      01273 
+0366                  01274 BT_3_COMMON_THER
+0366   15A2           01275         BSF MOD_STATUS,MODE4
+0367   2???           01276         GOTO CHECK_NEXTLAP
+0368                  01277 BT_3_COMMON_CLOCK
+0368   1522           01278         BSF MOD_STATUS,MODE3
+0369   1423           01279         BSF CLK_STATUS,HOUR
+036A   1021           01280         BCF SWT_STATUS,HM_CONV
+036B   0008           01281         RETURN
+036C                  01282 BT_3_CLOCKMODY
+036C   1923           01283         BTFSC CLK_STATUS,SEC
+036D   2???           01284         GOTO BT_3_CLOCKMODY_END
+Message[305]: Using default destination of 1 (file).
+036E   0DA3           01285         RLF CLK_STATUS
+036F   0008           01286         RETURN
+0370                  01287 BT_3_CLOCKMODY_END
+0370   01A3           01288         CLRF CLK_STATUS
+0371   1122           01289         BCF MOD_STATUS,MODE3
+0372   0008           01290         RETURN
+0373                  01291 BT_3_LAPCHECK
+0373   2???           01292         GOTO CHECK_NEXTLAP
+                      01293 
+Warning[205]: Found directive in column 1. (END)
+                      01294 END
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+AD_DONE                           00000005
+ANL_CNT                           0000002D
+ANL_ENABLE                        00000002
+ANL_GO                            00000077
+ANL_MOD                           00000070
+A_INTR                            0000007A
+BCLIE                             00000003
+BCLIF                             00000003
+BEEP_1                            00000149
+BEEP_2                            00000150
+BEEP_3                            00000157
+BEEP_4                            0000015F
+BEEP_MAIN                         0000013C
+BEEP_MAIN1                        00000141
+BEEP_MAIN2                        00000142
+BEEP_MOD                          00000086
+BEEP_STATUS                       0000003F
+BEEP_SWT2                         0000012F
+BF                                00000000
+BRGH                              00000002
+BTD_MOD                           00000082
+BT_1                              00000338
+BT_1_CLOCKMODY                    00000359
+BT_1_COMMON_CLOCK                 00000353
+BT_1_COMMON_THER                  00000349
+BT_1_LAPCHECK                     0000035F
+BT_2                              0000033F
+BT_2_CLOCKMODY                    00000360
+BT_3                              00000342
+BT_3_CLOCKMODY                    0000036C
+BT_3_CLOCKMODY_END                00000370
+BT_3_COMMON_CLOCK                 00000368
+BT_3_COMMON_THER                  00000366
+BT_3_LAPCHECK                     00000373
+BT_CHECK                          000000FD
+BT_DELAY                          0000002B
+BT_ENABLE                         00000001
+BT_LOOP                           000000F8
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BT_LOOP1                          00000103
+BT_LOOP2                          0000010B
+BT_LOOP3                          00000113
+BT_LOOP_END                       0000011B
+BUZZ_BEEP_MOD                     00000129
+BUZZ_CTR                          0000011E
+BUZZ_OFF                          00000127
+BUZZ_ON                           00000125
+B_BEEP                            0000006F
+B_BEEPALLOW                       00000001
+B_BEEPTEMPO                       00000002
+B_BEEP_CNT                        00000070
+B_BEEP_EB                         00000071
+B_DELAY                           0000002A
+B_ENABLE                          00000000
+B_PRES                            00000003
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CF                                00000000
+CHECK_NEXTLAP                     000002B2
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CK_LOOP                           000000CC
+CK_LOOP_2                         000000ED
+CK_LOOP_S                         000000C3
+CK_LOOP_S2                        000000CA
+CK_LPS                            000000B4
+CLEAR_BEEP                        00000147
+CLEAR_BEEPTEM                     0000013A
+CLK_STATUS                        00000023
+CLOCKMODY_DECF_HOUR               00000294
+CLOCKMODY_DECF_MIN                00000283
+CLOCKMODY_INCF_HOUR               00000273
+CLOCKMODY_INCF_MIN                00000265
+CLOCKMODY_RESET_SEC               00000262
+CLOCK_TO_THER                     000002AF
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CR_TH                             00000038
+CR_TH_BUFF                        0000003A
+CR_TH_LAP                         00000039
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+C_INCF_HR_2                       0000027B
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DEFAULT_ST                        0000009F
+DISP                              00000022
+DISP1                             00000031
+DISP2                             0000003C
+DISP3                             00000047
+DISP4                             00000052
+DISPBF_1                          0000003B
+DISPBF_2                          0000003C
+DISPBF_3                          0000003D
+DISPBF_4                          0000003E
+DISPBF_CONTROL                    000002C0
+DISP_CHECK_CLOCK                  00000315
+DISP_CHECK_CLOCK_HM               00000319
+DISP_CHECK_CLOCK_MS               00000322
+DISP_CHECK_THER                   0000032B
+DISP_CLOCKMODY                    000002F3
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+DISP_CLOCKMODY_HOUR               00000303
+DISP_CLOCKMODY_SEC                00000306
+DISP_COMMON_CLOCK                 000002CE
+DISP_COMMON_CLOCK_HM              000002D3
+DISP_COMMON_CLOCK_MS              000002DC
+DISP_COMMON_THER                  000002E5
+DISP_LAPCHECK                     00000311
+DISP_LED                          0000005C
+DOT_1_OFF                         00000212
+DOT_1_ON                          00000214
+DOT_1_ON_BLINK                    0000020F
+DOT_2_OFF                         00000219
+DOT_2_ON                          0000021B
+DOT_2_ON_BLINK                    00000216
+DOT_3_OFF                         00000220
+DOT_3_ON                          00000222
+DOT_3_ON_BLINK                    0000021D
+DOT_4_OFF                         00000227
+DOT_4_ON                          00000229
+DOT_4_ON_BLINK                    00000224
+DOT_CHECK1                        00000000
+DOT_CHECK2                        00000001
+DOT_HALF                          00000003
+DOT_LOOP                          000000B9
+DOT_QUADRA                        00000004
+DOT_SEC                           00000002
+DOT_SWT1                          00000004
+DOT_SWT2                          00000005
+DOT_SWT3                          00000006
+DOT_SWT4                          00000007
+D_10HR                            00000065
+D_10HR_B                          0000006C
+D_10HR_ZF                         000002A2
+D_10MIN                           00000063
+D_10MIN_B                         0000006A
+D_10MIN_ZF                        0000028F
+D_10SEC                           00000061
+D_10SEC_B                         00000068
+D_1HR                             00000064
+D_1HR_B                           0000006B
+D_1HR_ZF                          0000029A
+D_1MIN                            00000062
+D_1MIN_B                          00000069
+D_1MIN_ZF                         00000288
+D_1SEC                            00000060
+D_1SEC_B                          00000067
+D_A                               00000005
+D_CONV                            00000010
+D_NOT_A                           00000005
+D_THR                             00000066
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+GP_STATUS                         00000020
+HALF_CHECK                        00000006
+HM_CONV                           00000000
+HM_CONV_SET                       00000357
+HOUR                              00000000
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+INT_CNT                           00000029
+INT_SWT1                          00000000
+INT_SWT2                          00000001
+INT_SWT3                          00000002
+INT_SWT4                          00000003
+IR                                00000007
+IRP                               00000007
+LAP_ENDED                         000002BE
+LAP_EXT                           00000003
+LAP_LAST                          000002BC
+LAP_NUM                           00000072
+LAP_OV                            00000004
+LAP_PLUS_OVER                     00000351
+LAP_POP                           0000024A
+LAP_REG                           00000235
+LED_SWT1                          00000007
+LED_SWT2                          00000006
+LED_SWT3                          00000005
+LOOP_START                        000000B4
+L_LOOP                            0000011B
+MAIN_BF                           0000006D
+MIN                               00000001
+MODE1                             00000000
+MODE2                             00000001
+MODE3                             00000002
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+MODE4                             00000003
+MODE_CONV                         000002AA
+MOD_STATUS                        00000022
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PC_TEMP                           00000028
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+POP_STACK                         00000231
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PUSH_STACK                        0000022E
+P_CONV                            00000069
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 33
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RET_VOL                           0000002C
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RST_FSR                           0000022B
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEC                               00000002
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SP_STATUS                         00000024
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 34
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STACK_BF                          0000006E
+STACK_NUM                         00000025
+START_UP                          0000008B
+STATUS                            00000003
+SWT_STATUS                        00000021
+SYNC                              00000004
+S_BUF                             00000040
+S_TEMP                            00000027
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TBF_BF                            0000002F
+TBF_CNT                           0000002E
+THBF_1                            00000031
+THBF_2                            00000032
+THBF_3                            00000033
+THBF_4                            00000034
+THBF_HALF                         00000030
+THLOOP                            000000F6
+TH_CALC                           000001FA
+TH_CALC_LOOP                      000001FD
+TH_CONTROL                        00000167
+TH_CONT_0                         00000177
+TH_CONT_1                         00000182
+TH_CONT_2                         0000018E
+TH_CONT_3                         00000199
+TH_CONT_4                         000001A5
+TH_CONT_5                         000001B0
+TH_CONT_6                         000001BC
+TH_CONT_7                         000001C7
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 35
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+T_1                               00000035
+T_10                              00000036
+T_100                             00000037
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+W_TEMP                            00000026
+MPASM  5.43                          MAIN.ASM   12-15-2017  12:31:55         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+XLOOP                             000000F5
+XLOOP_END                         000000F6
+Z                                 00000002
+ZF                                00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F876A                         00000001
+__DEBUG                           1
+__MPLAB_DEBUGGER_REAL_ICE         1
+
+Errors   :     0
+Warnings :     5 reported,     0 suppressed
+Messages :    53 reported,     0 suppressed
+
+

@@ -1,0 +1,58 @@
+Warning[205] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1 : Found directive in column 1. (PROCESSOR)
+Warning[205] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 153 : Found directive in column 1. (ORG)
+Warning[203] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 154 : Found opcode in column 1. (GOTO)
+Warning[205] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 157 : Found directive in column 1. (ORG)
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 350 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 359 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 366 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 373 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 380 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 390 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 391 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 436 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 447 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 453 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 459 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 465 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 471 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 472 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 478 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 575 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 578 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 582 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 585 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 597 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 684 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 709 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 734 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 759 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 767 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 768 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 770 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 778 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 779 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 781 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 789 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 790 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 792 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 798 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 819 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 825 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 905 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 911 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 917 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 960 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 966 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 976 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 977 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 983 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 998 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1004 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1019 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1020 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1026 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1029 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1057 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1236 : Using default destination of 1 (file).
+Message[305] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1285 : Using default destination of 1 (file).
+Warning[205] D:\GIT\QUADRATHERMOMETER\MAIN.ASM 1294 : Found directive in column 1. (END)
